@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JSON.prune.js : a pruning stringifier</title>
+	<script src=JSON.prune.js></script>
+	<style>
+		pre {margin-left:20px;	}
+	</style>
+</head>
+<body>
+<h2>What it is</h2>
+<p>
+	A pruning <code>JSON.stringify</code> for the very specific cases where you need to be able to stringify very big or recursive javascript objects and don't really need the result to be complete.
+</p>
+	<code><pre>
+var json = JSON.stringify(window); // this fails
+
+var json = JSON.prune(window); // this builds a JSON valid string from a pruned version of the recursive, deep, and not totally accessible window object
+
+var prunedWindow = JSON.parse(JSON.prune(window)); // this builds a lighter and not recursive version of window
+
+	</pre></code>
+<p>
+	It's totally useless for at least 99% of js developpers.
+</p>
+<h2>Include it</h2>
+
+You may <a href=JSON.prune.js>download JSON.prune.js</a> and include it from your site.
+<br>Or you may include the file directly from my server :
+<code><pre>
+&lt;script src=http://dystroy.org/JSON.prune/.js&gt;&lt;/script&gt;
+</pre></code>
+
+<h2>Links</h2>
+<ul>
+	<li><a href=https://github.com/Canop/JSON.prune>JSON.prune on github</a></li>
+	<li><a href=http://stackoverflow.com/q/13861254/263525>Stack Overflow discussion</a></li>
+	<li><a href=https://github.com/douglascrockford/JSON-js/blob/master/json2.js>Crockford's code on which JSON.prune is based</a></li>
+</ul>
+
+<h2>Test it here</h2>
+	Open the console and type lines like the following ones :
+	<code><pre>
+JSON.prune({a:1, b:[1, 2, 3]});
+JSON.prune(window);
+var a=[]; for (var i=0;i<1000;i++) {a.push(i<2?1:a[i-2]+a[i-1])} JSON.prune(a, 0, 200);
+	</pre></code>
+</body>
+</html>
