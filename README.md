@@ -1,7 +1,7 @@
 JSON.prune
 ==========
 
-A pruning JSON.stringify for the very specific cases where you need to be able to stringify big or recursive javascript objects and don't really need the result to be complete.
+JSON.prune is a pruning JSON.stringify for the very specific cases where you need to be able to stringify big or recursive javascript objects and don't really need the result to be complete.
 
     var json = JSON.stringify(window); // fails
     var json = JSON.prune(window); // builds a JSON valid string from a pruned version of the
@@ -9,6 +9,12 @@ A pruning JSON.stringify for the very specific cases where you need to be able t
     var prunedWindow = JSON.parse(JSON.prune(window)); // builds a lighter acyclic version of window
 
 It's totally useless for at least 99% of js developpers.
+
+JSON.prune.log is a proxy over console.log deep cloning the objects (using JSON.prune) before logging them, in order to avoid the delay problem encountered on non primitive objects logging.
+
+You should not use it frequently, only when you really need to see the objects how they were at logging time.
+
+JSON.prune.log
 
 Project/Test page
 -----------------

@@ -89,5 +89,9 @@
         arrayMaxLength = arrayMaxLength || DEFAULT_ARRAY_MAX_LENGTH;
 		return str('', {'': value}, depthDecr, arrayMaxLength);
     };
+    
+    JSON.prune.log = function() {
+		console.log.apply(console,  Array.prototype.slice.call(arguments).map(function(v){return JSON.parse(JSON.prune(v))}));
+	}
 
 }());

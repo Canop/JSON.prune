@@ -23,6 +23,17 @@ var prunedWindow = JSON.parse(JSON.prune(window)); // this builds a lighter and 
 <p>
 	It's totally useless for at least 99% of js developpers.
 </p>
+
+<p>
+<code>JSON.prune.log</code> is a proxy over console.log deep cloning the objects before logging them, in order to avoid the delay problem encountered on non primitive objects logging (<a href=http://stackoverflow.com/questions/14296722/on-object-parameter-is-not-properly-set-in-javascript>see here for example</a>).
+</p>
+	<code><pre>
+JSON.prune.log('some object:', window); 
+	</pre></code>
+<p>
+You should not use it frequently, only when you really need to see the objects how they were at logging time.
+</p>
+
 <h2>Include it</h2>
 
 You may <a href=JSON.prune.js>download JSON.prune.js</a> and include it from your site.
