@@ -14,7 +14,8 @@ JSON.prune.log is a proxy over console.log deep cloning the objects (using JSON.
 
 You should not use it frequently, only when you really need to see the objects how they were at logging time.
 
-JSON.prune.log
+    // make sure someObject is logged as it was at logging time
+    JSON.prune.log(someObject);
 
 Project/Test page
 -----------------
