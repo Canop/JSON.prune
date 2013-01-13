@@ -10,7 +10,7 @@
 <body>
 <h2>What it is</h2>
 <p>
-	A pruning <code>JSON.stringify</code> for the very specific cases where you need to be able to stringify big or recursive javascript objects and don't really need the result to be complete.
+	A pruning <code>JSON.stringify</code> for the very specific cases where you need to be able to <code>stringify</code> big or recursive javascript objects and don't really need the result to be complete.
 </p>
 	<code><pre>
 var json = JSON.stringify(window); // this fails
@@ -21,11 +21,11 @@ var prunedWindow = JSON.parse(JSON.prune(window)); // this builds a lighter and 
 
 	</pre></code>
 <p>
-	It's totally useless for at least 99% of js developpers.
+	It's totally useless for at least 99% js developpers.
 </p>
 
 <p>
-<code>JSON.prune.log</code> is a proxy over console.log deep cloning the objects before logging them, in order to avoid the delay problem encountered on non primitive objects logging (<a href=http://stackoverflow.com/questions/14296722/on-object-parameter-is-not-properly-set-in-javascript>see here for example</a>).
+<code>JSON.prune.log</code> is a proxy over <code>console.log</code> deep cloning the objects before logging them, in order to avoid the delay problem encountered on non primitive objects logging (<a href=http://stackoverflow.com/questions/14296722/on-object-parameter-is-not-properly-set-in-javascript>see here for example</a>).
 </p>
 	<code><pre>
 JSON.prune.log('some object:', window); 
