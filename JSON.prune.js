@@ -1,18 +1,48 @@
 // JSON.prune : a function to stringify any object without overflow
-// example : var json = JSON.prune(window)
 // two additional optional parameters :
 //   - the maximal depth (default : 6)
 //   - the maximal length of arrays (default : 50)
+// You can also pass an "options" object.
+// examples :
+//   var json = JSON.prune(window)
+//   var arr = Array.apply(0,Array(1000)); var json = JSON.prune(arr, 4, 20)
+//   var json = JSON.prune(window.location, {inheritedProperties:true})
 // Web site : http://dystroy.org/JSON.prune/
 // JSON.prune on github : https://github.com/Canop/JSON.prune
 // This was discussed here : http://stackoverflow.com/q/13861254/263525
 // The code is based on Douglas Crockford's code : https://github.com/douglascrockford/JSON-js/blob/master/json2.js
+// No effort was done to support old browsers. JSON.prune will fail on IE8.
 (function () {
     'use strict';
 
 	var DEFAULT_MAX_DEPTH = 6;
 	var DEFAULT_ARRAY_MAX_LENGTH = 50;
 	var seen; // Same variable used for all stringifications
+	var iterator; // either forEachEnumerableOwnProperty, forEachEnumerableProperty or forEachProperty
+	
+	// iterates on enumerable own properties (default behavior)
+	var forEachEnumerableOwnProperty = function(obj, callback) {
+		for (var k in obj) {
+			if (obj.hasOwnProperty(k)) callback(k);
+		}
+	};
+	// iterates on enumerable properties
+	var forEachEnumerableProperty = function(obj, callback) {
+		for (var k in obj) callback(k);
+	};
+	// iterates on properties, even non enumerable and inherited ones
+	// This is dangerous
+	var forEachProperty = function(obj, callback, excluded) {
+		if (obj==null) return;
+		excluded = excluded || {};
+		Object.getOwnPropertyNames(obj).forEach(function(k){
+			if (!excluded[k]) {
+				callback(k);
+				excluded[k] = true;
+			}
+		});
+		forEachProperty(Object.getPrototypeOf(obj), callback, excluded);
+	};
 
 	Date.prototype.toPrunedJSON = Date.prototype.toJSON;
 	String.prototype.toPrunedJSON = String.prototype.toJSON;
@@ -67,23 +97,31 @@
                 for (i = 0; i < length; i += 1) {
                     partial[i] = str(i, value, depthDecr-1, arrayMaxLength) || 'null';
                 }
-                return  partial.length ? '[' + partial.join(',') + ']' : '[]';
+                return  '[' + partial.join(',') + ']';
             }
-			for (k in value) {
-				if (Object.prototype.hasOwnProperty.call(value, k)) {
-					try {
-						v = str(k, value, depthDecr-1, arrayMaxLength);
-						if (v) partial.push(quote(k) + ':' + v);
-					} catch (e) { 
-						// this try/catch due to forbidden accessors on some objects
-					}
-				}
-			}
-            return partial.length ? '{' + partial.join(',') + '}' : '{}';
+            iterator(value, function(k) {
+				try {
+					v = str(k, value, depthDecr-1, arrayMaxLength);
+					if (v) partial.push(quote(k) + ':' + v);
+				} catch (e) { 
+					// this try/catch due to forbidden accessors on some objects
+				}				
+			});
+            return '{' + partial.join(',') + '}';
         }
     }
 
 	JSON.prune = function (value, depthDecr, arrayMaxLength) {
+		if (typeof depthDecr == "object") {
+			var options = depthDecr;
+			depthDecr = options.depthDecr;
+			arrayMaxLength = options.arrayMaxLength;
+			iterator = options.iterator || forEachEnumerableOwnProperty;
+			if (options.allProperties) iterator = forEachProperty;
+			else if (options.inheritedProperties) iterator = forEachEnumerableProperty
+		} else {
+			iterator = forEachEnumerableOwnProperty;
+		}
 		seen = [];
         depthDecr = depthDecr || DEFAULT_MAX_DEPTH;
         arrayMaxLength = arrayMaxLength || DEFAULT_ARRAY_MAX_LENGTH;
@@ -93,5 +131,6 @@
     JSON.prune.log = function() {
 		console.log.apply(console,  Array.prototype.slice.call(arguments).map(function(v){return JSON.parse(JSON.prune(v))}));
 	}
+	JSON.prune.forEachProperty = forEachProperty; // you might want to also assign it to Object.forEachProperty
 
 }());

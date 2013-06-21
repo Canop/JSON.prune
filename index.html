@@ -4,7 +4,8 @@
 	<title>JSON.prune.js : a pruning stringifier</title>
 	<script src=JSON.prune.js></script>
 	<style>
-		pre {margin-left:20px;	}
+		pre {margin-left:20px}
+		body {margin-bottom: 200px}
 	</style>
 </head>
 <body>
@@ -49,12 +50,47 @@ You may <a href=JSON.prune.js>download JSON.prune.js</a> and include it from you
 	<li><a href=https://github.com/douglascrockford/JSON-js/blob/master/json2.js>Crockford's code on which JSON.prune is based</a></li>
 </ul>
 
-<h2>Test it here</h2>
+<h2>Test it in the console</h2>
 	Open the console and type lines like the following ones :
 	<code><pre>
 JSON.prune({a:1, b:[1, 2, 3]});
 JSON.prune(window);
+JSON.prune(window.location,{inheritedProperties: true}); // without this settings, FireFox only shows an empty object
 var a=[]; for (var i=0;i<1000;i++) {a.push(i<2?1:a[i-2]+a[i-1])} JSON.prune(a, 0, 200);
 	</pre></code>
+
+<h2>Test it in the page</h2>
+	<br><input checked type=radio name=opts id=std><label for=std>Options : <code>{}</code> This is the standard recommended iteration.</label>
+	<br><input type=radio name=opts id=inheritedProperties><label for=inheritedProperties>Options : <code>{inheritedProperties: true}</code> This also dumps enumerable inherited properties of objects.</label>
+	<br><input type=radio name=opts id=allProperties><label for=allProperties>Options : <code>{allProperties: true}</code> This also dumps non enumerable and inherited properties of objects. This might chocke your browser on some host objects. This is not recommended.</label>
+	<br><br>
+	<div id=buttons></div>
+	<code><pre id=result>
+	</pre></code>
+	<script>		
+		var tests = [
+			"'Hello'",
+			"var a={num:NaN,arr:[]};a.in=a;a",
+			"window",
+			"console",
+			"window.location",
+			"Array.apply(0,Array(1e3)).map(Math.random)"
+		];
+		var $ = document.getElementById.bind(document);
+		for (var i=0; i<tests.length; i++) {
+			(function(str){
+				var butt = document.createElement('input');
+				butt.setAttribute('type','button');
+				butt.setAttribute('value',tests[i]);
+				butt.onclick = function(){
+					$('result').innerHTML = JSON.prune(eval(str), {
+						inheritedProperties: !!$('inheritedProperties').checked,
+						allProperties:       !!$('allProperties').checked
+					});
+				};
+				$('buttons').appendChild(butt);
+			})(tests[i]);
+		}
+	</script>
 </body>
 </html>
