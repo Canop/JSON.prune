@@ -8,6 +8,10 @@ JSON.prune is a pruning JSON.stringify for the very specific cases where you nee
                                    // recursive, deep, and not totally accessible window object
     var prunedWindow = JSON.parse(JSON.prune(window)); // builds a lighter acyclic version of window
 
+JSON.prune also lets you, in case of need, stringify inherited and/or non enumerable properties.
+
+	JSON.prune(window.location,{inheritedProperties: true}); // without inherited properties, FireFox only shows an empty object
+
 It's totally useless for at least 99% of js developpers.
 
 JSON.prune.log is a proxy over console.log deep cloning the objects (using JSON.prune) before logging them, in order to avoid the delay problem encountered on non primitive objects logging.
