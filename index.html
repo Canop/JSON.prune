@@ -55,7 +55,7 @@ You may <a href=JSON.prune.js>download JSON.prune.js</a> and include it from you
 	<code><pre>
 JSON.prune({a:1, b:[1, 2, 3]});
 JSON.prune(window);
-JSON.prune(window.location,{inheritedProperties: true}); // without this settings, FireFox only shows an empty object
+JSON.prune(window.location,{inheritedProperties: true}); // without this setting, FireFox and IE only show an empty object
 var a=[]; for (var i=0;i<1000;i++) {a.push(i<2?1:a[i-2]+a[i-1])} JSON.prune(a, 0, 200);
 	</pre></code>
 

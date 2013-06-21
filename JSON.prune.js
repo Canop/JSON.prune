@@ -23,7 +23,7 @@
 	// iterates on enumerable own properties (default behavior)
 	var forEachEnumerableOwnProperty = function(obj, callback) {
 		for (var k in obj) {
-			if (obj.hasOwnProperty(k)) callback(k);
+			if (Object.prototype.hasOwnProperty.call(obj, k)) callback(k);
 		}
 	};
 	// iterates on enumerable properties

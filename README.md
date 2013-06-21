@@ -10,7 +10,7 @@ JSON.prune is a pruning JSON.stringify for the very specific cases where you nee
 
 JSON.prune also lets you, in case of need, stringify inherited and/or non enumerable properties.
 
-	JSON.prune(window.location,{inheritedProperties: true}); // without inherited properties, FireFox only shows an empty object
+	JSON.prune(window.location, {inheritedProperties:true}); // without inherited properties, FireFox and IE only show an empty object
 
 It's totally useless for at least 99% of js developpers.
 
