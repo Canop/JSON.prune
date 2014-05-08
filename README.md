@@ -30,3 +30,8 @@ Include it
 ----------
 
 	<script src=http://dystroy.org/JSON.prune/.js></script>
+
+License
+-------
+
+Public Domain. Use as you wish and at your own risk.
