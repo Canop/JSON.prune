@@ -29,7 +29,7 @@ Project/Test page
 Include it
 ----------
 
-	<script src=http://dystroy.org/JSON.prune/.js></script>
+	<script src=http://dystroy.org/JSON.prune/JSON.prune.js></script>
 
 License
 -------
