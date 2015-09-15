@@ -26,10 +26,16 @@ Project/Test page
 
 [dystroy.org/JSON.prune](http://dystroy.org/JSON.prune)
 
-Include it
-----------
+Include it in a page
+-------------------
 
 	<script src=http://dystroy.org/JSON.prune/JSON.prune.js></script>
+
+Use it with CommonJS or in node
+-------------------------------
+
+	var prune = require('json-prune');
+	var json = prune(obj);
 
 License
 -------
