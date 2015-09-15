@@ -47,7 +47,7 @@
 	Date.prototype.toPrunedJSON = Date.prototype.toJSON;
 	String.prototype.toPrunedJSON = String.prototype.toJSON;
 
-	var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+	var	cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
 		escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
 		meta = {	// table of character substitutions
 			'\b': '\\b',
@@ -111,7 +111,7 @@
 		}
 	}
 
-	JSON.prune = function (value, depthDecr, arrayMaxLength) {
+	var prune = function (value, depthDecr, arrayMaxLength) {
 		if (typeof depthDecr == "object") {
 			var options = depthDecr;
 			depthDecr = options.depthDecr;
@@ -128,9 +128,11 @@
 		return str('', {'': value}, depthDecr, arrayMaxLength);
 	};
 	
-	JSON.prune.log = function() {
+	prune.log = function() {
 		console.log.apply(console,  Array.prototype.slice.call(arguments).map(function(v){return JSON.parse(JSON.prune(v))}));
 	}
-	JSON.prune.forEachProperty = forEachProperty; // you might want to also assign it to Object.forEachProperty
+	prune.forEachProperty = forEachProperty; // you might want to also assign it to Object.forEachProperty
 
+	if (typeof module !== "undefined") module.exports = prune;
+	else JSON.prune = prune;
 }());
