@@ -37,6 +37,11 @@ Use it with CommonJS or in node
 	var prune = require('json-prune');
 	var json = prune(obj);
 
+Discussions
+-----------
+
+[JavaScript room on Miaou](https://dystroy.org/miaou/8)
+
 License
 -------
 
