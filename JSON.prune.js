@@ -19,7 +19,7 @@
 	var DEFAULT_ARRAY_MAX_LENGTH = 50;
 	var seen; // Same variable used for all stringifications
 	var iterator; // either forEachEnumerableOwnProperty, forEachEnumerableProperty or forEachProperty
-	
+
 	// iterates on enumerable own properties (default behavior)
 	var forEachEnumerableOwnProperty = function(obj, callback) {
 		for (var k in obj) {
@@ -69,12 +69,11 @@
 		}) + '"' : '"' + string + '"';
 	}
 
-	function str(key, holder, depthDecr, arrayMaxLength) {
+	function str(key, holder, depthDecr, arrayMaxLength, customString) {
 		var i, k, v, length, partial, value = holder[key];
 		if (value && typeof value === 'object' && typeof value.toPrunedJSON === 'function') {
-			value = value.toPrunedJSON(key);
+  		value = value.toPrunedJSON(key);
 		}
-
 		switch (typeof value) {
 		case 'string':
 			return quote(value);
@@ -83,12 +82,14 @@
 		case 'boolean':
 		case 'null':
 			return String(value);
+		case 'function':
+      return customString ? quote(customString) : '"Function (pruned)"';
 		case 'object':
 			if (!value) {
 				return 'null';
 			}
 			if (depthDecr<=0 || seen.indexOf(value)!==-1) {
-				return '"-pruned-"';
+				return customString ? quote(customString) : value instanceof Array ? '"Array (pruned)"' : '"Object (pruned)"';
 			}
 			seen.push(value);
 			partial = [];
@@ -101,21 +102,22 @@
 			}
 			iterator(value, function(k) {
 				try {
-					v = str(k, value, depthDecr-1, arrayMaxLength);
+					v = str(k, value, depthDecr-1, arrayMaxLength, customString);
 					if (v) partial.push(quote(k) + ':' + v);
-				} catch (e) { 
+				} catch (e) {
 					// this try/catch due to forbidden accessors on some objects
-				}				
+				}
 			});
 			return '{' + partial.join(',') + '}';
 		}
 	}
 
-	var prune = function (value, depthDecr, arrayMaxLength) {
+	var prune = function (value, depthDecr, arrayMaxLength, customString) {
 		if (typeof depthDecr == "object") {
 			var options = depthDecr;
 			depthDecr = options.depthDecr;
 			arrayMaxLength = options.arrayMaxLength;
+      customString = options.customString;
 			iterator = options.iterator || forEachEnumerableOwnProperty;
 			if (options.allProperties) iterator = forEachProperty;
 			else if (options.inheritedProperties) iterator = forEachEnumerableProperty
@@ -125,9 +127,9 @@
 		seen = [];
 		depthDecr = depthDecr || DEFAULT_MAX_DEPTH;
 		arrayMaxLength = arrayMaxLength || DEFAULT_ARRAY_MAX_LENGTH;
-		return str('', {'': value}, depthDecr, arrayMaxLength);
+		return str('', {'': value}, depthDecr, arrayMaxLength, customString);
 	};
-	
+
 	prune.log = function() {
 		console.log.apply(console,  Array.prototype.slice.call(arguments).map(function(v){return JSON.parse(JSON.prune(v))}));
 	}
