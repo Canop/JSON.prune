@@ -42,6 +42,80 @@ Discussions
 
 [JavaScript room on Miaou](https://dystroy.org/miaou/8)
 
+Customization: replace the "-pruned-" placeholder
+-------------------------------------------------
+
+By specifiying a `replacer` or a `prunedString` in `JSON.prune` options, you can customize the following prunings:
+
+Value | Default
+------|--------
+undefined | Key and value are ommited (same as `JSON.stringify`)
+function | Key and value are ommited (same as `JSON.stringify`)
+already written or too deep object (cycle prevention) | The `"-pruned-"`string
+array with too many elements | Truncation: `JSON.prune` applied to only the start of the array
+
+The `replacer` function takes 3 arguments:
+* the value to replace
+* the default replacement value
+* a boolean indicating whether the replacement is due to a cycle detection
+
+The default value makes it easy to just specify the specific behavior you want instead of implementing the whole standard replacement.
+
+## Example 1: Use an object instead of string as pruning mark
+
+
+	var json = JSON.prune(obj, {prunedString: '{}' });
+
+Note: if you want a string to be inserted, don't forget the double quotes, as in `'"-pruned-"';
+
+## Example 2: Silent Pruning
+
+If you want the pruned properties to just be ommited, pass `undefined` as `prunedString`:
+
+	var obj = {a:3};
+	obj.self = obj;
+	var json = JSON.prune(obj);
+	console.log(json); // logs {"a":3,"self":"-pruned-"}
+	json = JSON.prune(obj, {prunedString: undefined });
+	console.log(json); // logs {"a":3}
+
+Note: This would have had the same behavior:
+
+	json = JSON.prune(obj, {replacer: function(){}});
+
+## Example 3: Verbose Pruning
+
+	var options = {replacer:function(value, defaultValue, circular){
+		if (circular) return '"-circular-"';
+		if (value === undefined) return '"-undefined-"';
+		if (Array.isArray(value)) return "-array("+value.length+")-";
+		return defaultValue;
+	}};
+	var json = JSON.prune(obj, options);
+
+## Example 4: Function "serialization"
+
+	var options = {replacer:function(value, defaultValue){
+		if (typeof value === "function") return JSON.stringify(value.toString());
+		return defaultValue;
+	}};
+	var json = JSON.prune(obj, options);
+
+## Example 5: Array truncation mark
+
+The default behavior on big arrays is to silently write only the first elements. It's possible with a `replacer` to add a string as last element:
+
+	var obj = {arr: Array.apply(0,Array(100)).map(function(_,i){ return i+1 })}
+	function replacer(value, defaultValue){
+		if (Array.isArray(value)) return defaultValue.replace(/]$/, ',"-truncated-"]');
+		return defaultValue;
+	}
+	var json = (asPrunedJSON(obj, {arrayMaxLength:5, replacer});
+
+This produces
+
+	{"arr":[1,2,3,4,5,"-truncated-"]}
+
 License
 -------
 

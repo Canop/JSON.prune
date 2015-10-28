@@ -17,6 +17,7 @@
 
 	var DEFAULT_MAX_DEPTH = 6;
 	var DEFAULT_ARRAY_MAX_LENGTH = 50;
+	var DEFAULT_PRUNED_VALUE = '"-pruned-"';
 	var seen; // Same variable used for all stringifications
 	var iterator; // either forEachEnumerableOwnProperty, forEachEnumerableProperty or forEachProperty
 	
@@ -69,49 +70,10 @@
 		}) + '"' : '"' + string + '"';
 	}
 
-	function str(key, holder, depthDecr, arrayMaxLength) {
-		var i, k, v, length, partial, value = holder[key];
-		if (value && typeof value === 'object' && typeof value.toPrunedJSON === 'function') {
-			value = value.toPrunedJSON(key);
-		}
-
-		switch (typeof value) {
-		case 'string':
-			return quote(value);
-		case 'number':
-			return isFinite(value) ? String(value) : 'null';
-		case 'boolean':
-		case 'null':
-			return String(value);
-		case 'object':
-			if (!value) {
-				return 'null';
-			}
-			if (depthDecr<=0 || seen.indexOf(value)!==-1) {
-				return '"-pruned-"';
-			}
-			seen.push(value);
-			partial = [];
-			if (Object.prototype.toString.apply(value) === '[object Array]') {
-				length = Math.min(value.length, arrayMaxLength);
-				for (i = 0; i < length; i += 1) {
-					partial[i] = str(i, value, depthDecr-1, arrayMaxLength) || 'null';
-				}
-				return  '[' + partial.join(',') + ']';
-			}
-			iterator(value, function(k) {
-				try {
-					v = str(k, value, depthDecr-1, arrayMaxLength);
-					if (v) partial.push(quote(k) + ':' + v);
-				} catch (e) { 
-					// this try/catch due to forbidden accessors on some objects
-				}				
-			});
-			return '{' + partial.join(',') + '}';
-		}
-	}
 
 	var prune = function (value, depthDecr, arrayMaxLength) {
+		var prunedString = DEFAULT_PRUNED_VALUE;
+		var replacer;
 		if (typeof depthDecr == "object") {
 			var options = depthDecr;
 			depthDecr = options.depthDecr;
@@ -119,13 +81,69 @@
 			iterator = options.iterator || forEachEnumerableOwnProperty;
 			if (options.allProperties) iterator = forEachProperty;
 			else if (options.inheritedProperties) iterator = forEachEnumerableProperty
+			if ("prunedString" in options) {
+				prunedString = options.prunedString;
+			}
+			if (options.replacer) {
+				replacer = options.replacer;
+			}
 		} else {
 			iterator = forEachEnumerableOwnProperty;
 		}
 		seen = [];
 		depthDecr = depthDecr || DEFAULT_MAX_DEPTH;
 		arrayMaxLength = arrayMaxLength || DEFAULT_ARRAY_MAX_LENGTH;
-		return str('', {'': value}, depthDecr, arrayMaxLength);
+		function str(key, holder, depthDecr) {
+			var i, k, v, length, partial, value = holder[key];
+			if (value && typeof value === 'object' && typeof value.toPrunedJSON === 'function') {
+				value = value.toPrunedJSON(key);
+			}
+
+			switch (typeof value) {
+			case 'string':
+				return quote(value);
+			case 'number':
+				return isFinite(value) ? String(value) : 'null';
+			case 'boolean':
+			case 'null':
+				return String(value);
+			case 'object':
+				if (!value) {
+					return 'null';
+				}
+				if (depthDecr<=0 || seen.indexOf(value)!==-1) {
+					if (replacer) {
+						var replacement = replacer(value, prunedString, true);
+						return replacement===undefined ? undefined : ''+replacement;
+					}
+					return prunedString;
+				}
+				seen.push(value);
+				partial = [];
+				if (Object.prototype.toString.apply(value) === '[object Array]') {
+					length = Math.min(value.length, arrayMaxLength);
+					for (i = 0; i < length; i += 1) {
+						partial[i] = str(i, value, depthDecr-1) || 'null';
+					}
+					v = '[' + partial.join(',') + ']';
+					if (replacer && value.length>arrayMaxLength) return replacer(value, v, false);
+					return v;
+				}
+				iterator(value, function(k) {
+					try {
+						v = str(k, value, depthDecr-1);
+						if (v) partial.push(quote(k) + ':' + v);
+					} catch (e) { 
+						// this try/catch due to forbidden accessors on some objects
+					}				
+				});
+				return '{' + partial.join(',') + '}';
+			case 'function':
+			case 'undefined':
+				return replacer ? replacer(value, undefined, false) : undefined;
+			}
+		}
+		return str('', {'': value}, depthDecr);
 	};
 	
 	prune.log = function() {
