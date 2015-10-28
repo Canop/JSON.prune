@@ -51,7 +51,7 @@ Value | Default
 ------|--------
 `undefined` | Key and value are ommited (same as `JSON.stringify`)
 function | Key and value are ommited (same as `JSON.stringify`)
-already written or too deep object (cycle prevention) | The `"-pruned-"`string
+already written or too deep object (cycle prevention) | The `"-pruned-"` string
 array with too many elements | Truncation: `JSON.prune` applied to only the start of the array
 
 The `replacer` function takes 3 arguments:
@@ -68,7 +68,7 @@ The default value makes it easy to just specify the specific behavior you want i
 
 	var json = JSON.prune(obj, {prunedString: '{}' });
 
-Note: if you want a string to be inserted, don't forget the double quotes, as in `'"-pruned-"';
+Note: if you want a string to be inserted, don't forget the double quotes, as in `'"-pruned-"'`.
 
 ### Example 2: Silent Pruning
 
