@@ -49,7 +49,7 @@ By specifiying a `replacer` or a `prunedString` in `JSON.prune` options, you can
 
 Value | Default
 ------|--------
-undefined | Key and value are ommited (same as `JSON.stringify`)
+`undefined` | Key and value are ommited (same as `JSON.stringify`)
 function | Key and value are ommited (same as `JSON.stringify`)
 already written or too deep object (cycle prevention) | The `"-pruned-"`string
 array with too many elements | Truncation: `JSON.prune` applied to only the start of the array
@@ -59,9 +59,11 @@ The `replacer` function takes 3 arguments:
 * the default replacement value
 * a boolean indicating whether the replacement is due to a cycle detection
 
+Returning `undefined` makes `JSON.prune` ommit the property (name and value).
+
 The default value makes it easy to just specify the specific behavior you want instead of implementing the whole standard replacement.
 
-## Example 1: Use an object instead of string as pruning mark
+## Example 1: Use an object instead of a string as pruning mark
 
 
 	var json = JSON.prune(obj, {prunedString: '{}' });
@@ -79,7 +81,7 @@ If you want the pruned properties to just be ommited, pass `undefined` as `prune
 	json = JSON.prune(obj, {prunedString: undefined });
 	console.log(json); // logs {"a":3}
 
-Note: This would have had the same behavior:
+Note: You get the same behavior with
 
 	json = JSON.prune(obj, {replacer: function(){}});
 
