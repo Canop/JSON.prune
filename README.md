@@ -90,7 +90,7 @@ Note: You get the same behavior with
 	var options = {replacer:function(value, defaultValue, circular){
 		if (circular) return '"-circular-"';
 		if (value === undefined) return '"-undefined-"';
-		if (Array.isArray(value)) return "-array("+value.length+")-";
+		if (Array.isArray(value)) return '"-array('+value.length+')-"';
 		return defaultValue;
 	}};
 	var json = JSON.prune(obj, options);
