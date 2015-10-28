@@ -63,14 +63,14 @@ Returning `undefined` makes `JSON.prune` ommit the property (name and value).
 
 The default value makes it easy to just specify the specific behavior you want instead of implementing the whole standard replacement.
 
-## Example 1: Use an object instead of a string as pruning mark
+### Example 1: Use an object instead of a string as pruning mark
 
 
 	var json = JSON.prune(obj, {prunedString: '{}' });
 
 Note: if you want a string to be inserted, don't forget the double quotes, as in `'"-pruned-"';
 
-## Example 2: Silent Pruning
+### Example 2: Silent Pruning
 
 If you want the pruned properties to just be ommited, pass `undefined` as `prunedString`:
 
@@ -85,7 +85,7 @@ Note: You get the same behavior with
 
 	json = JSON.prune(obj, {replacer: function(){}});
 
-## Example 3: Verbose Pruning
+### Example 3: Verbose Pruning
 
 	var options = {replacer:function(value, defaultValue, circular){
 		if (circular) return '"-circular-"';
@@ -95,7 +95,7 @@ Note: You get the same behavior with
 	}};
 	var json = JSON.prune(obj, options);
 
-## Example 4: Function "serialization"
+### Example 4: Function "serialization"
 
 	var options = {replacer:function(value, defaultValue){
 		if (typeof value === "function") return JSON.stringify(value.toString());
@@ -103,7 +103,7 @@ Note: You get the same behavior with
 	}};
 	var json = JSON.prune(obj, options);
 
-## Example 5: Array truncation mark
+### Example 5: Array truncation mark
 
 The default behavior on big arrays is to silently write only the first elements. It's possible with a `replacer` to add a string as last element:
 
