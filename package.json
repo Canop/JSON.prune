@@ -1,6 +1,6 @@
 {
   "name": "json-prune",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": " pruning JSON.stringify for the very specific cases where you need to stringify big or recursive javascript objects and don't really need the result to be complete",
   "main": "JSON.prune.js",
   "scripts": {

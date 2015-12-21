@@ -1,7 +1,7 @@
 JSON.prune
 ==========
 
-JSON.prune is a pruning JSON.stringify for the very specific cases where you need to stringify big or recursive javascript objects and don't really need the result to be complete.
+JSON.prune is a pruning `JSON.stringify` for the very specific cases where you need to stringify big or recursive javascript objects and don't really need the result to be complete.
 
     var json = JSON.stringify(window); // fails
     var json = JSON.prune(window); // builds a JSON valid string from a pruned version of the
@@ -121,4 +121,4 @@ This produces
 License
 -------
 
-Public Domain. Use as you wish and at your own risk.
+MIT
