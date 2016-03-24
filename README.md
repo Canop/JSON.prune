@@ -1,6 +1,9 @@
 JSON.prune
 ==========
 
+[![Chat on Miaou](https://dystroy.org/miaou/static/shields/room-en.svg)](https://dystroy.org/miaou/8?Javascript)
+[![Chat on Miaou](https://dystroy.org/miaou/static/shields/room-fr.svg)](https://dystroy.org/miaou/3?Code_Croissants)
+
 JSON.prune is a pruning `JSON.stringify` for the very specific cases where you need to stringify big or recursive javascript objects and don't really need the result to be complete.
 
     var json = JSON.stringify(window); // fails
