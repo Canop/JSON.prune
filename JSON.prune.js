@@ -147,8 +147,10 @@
 	};
 	
 	prune.log = function() {
-		console.log.apply(console,  Array.prototype.slice.call(arguments).map(function(v){return JSON.parse(JSON.prune(v))}));
-	}
+		console.log.apply(console, Array.prototype.map.call(arguments, function(v) {
+			return JSON.parse(JSON.prune(v));
+		}));
+	};
 	prune.forEachProperty = forEachProperty; // you might want to also assign it to Object.forEachProperty
 
 	if (typeof module !== "undefined") module.exports = prune;
