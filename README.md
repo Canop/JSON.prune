@@ -48,7 +48,7 @@ Discussions
 Customization: replace the "-pruned-" placeholder
 -------------------------------------------------
 
-By specifiying a `replacer` or a `prunedString` in `JSON.prune` options, you can customize the following prunings:
+Here's how are handled by default by JSON.prune the special values needing pruning:
 
 Value | Default
 ------|--------
@@ -56,6 +56,8 @@ Value | Default
 function | Key and value are ommited (same as `JSON.stringify`)
 already written or too deep object (cycle prevention) | The `"-pruned-"` string
 array with too many elements | Truncation: `JSON.prune` applied to only the start of the array
+
+By specifiying a `replacer` or a `prunedString` in `JSON.prune` options, you can customize those prunings.
 
 The `replacer` function takes 3 arguments:
 * the value to replace
