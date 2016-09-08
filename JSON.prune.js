@@ -94,8 +94,12 @@
 		arrayMaxLength = arrayMaxLength || DEFAULT_ARRAY_MAX_LENGTH;
 		function str(key, holder, depthDecr) {
 			var i, k, v, length, partial, value = holder[key];
+
 			if (value && typeof value === 'object' && typeof value.toPrunedJSON === 'function') {
 				value = value.toPrunedJSON(key);
+			}
+			if (value && typeof value.toJSON === 'function') {
+				value = value.toJSON(); 
 			}
 
 			switch (typeof value) {
