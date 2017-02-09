@@ -15,8 +15,6 @@ JSON.prune also lets you, in case of need, stringify inherited and/or non enumer
 
 	JSON.prune(window.location, {inheritedProperties:true}); // without inherited properties, FireFox and IE only show an empty object
 
-It's totally useless for at least 99% of js developpers.
-
 JSON.prune.log is a proxy over console.log deep cloning the objects (using JSON.prune) before logging them, in order to avoid the delay problem encountered on non primitive objects logging.
 
 You should not use it frequently, only when you really need to see the objects how they were at logging time.
