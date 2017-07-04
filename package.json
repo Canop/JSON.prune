@@ -15,7 +15,7 @@
     "pruning",
     "stringify"
   ],
-  "author": "Denys Séguret <denys.seguret@gmail.com> (http://dystroy.org)",
+  "author": "Denys Séguret <denys.seguret@gmail.com> (https://dystroy.org)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Canop/JSON.prune/issues"
