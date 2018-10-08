@@ -1,8 +1,8 @@
 JSON.prune
 ==========
 
-[![Chat on Miaou](https://dystroy.org/miaou/static/shields/room-en.svg?v=1)](https://dystroy.org/miaou/8?Javascript)
-[![Chat on Miaou](https://dystroy.org/miaou/static/shields/room-fr.svg?v=1)](https://dystroy.org/miaou/3?Code_Croissants)
+[![Chat on Miaou](https://miaou.dystroy.org/static/shields/room-en.svg?v=1)](https://miaou.dystroy.org/8?Javascript)
+[![Chat on Miaou](https://miaou.dystroy.org/static/shields/room-fr.svg?v=1)](https://miaou.dystroy.org/3?Code_Croissants)
 
 JSON.prune is a pruning `JSON.stringify` for the very specific cases where you need to stringify big or recursive javascript objects and don't really need the result to be complete.
 
