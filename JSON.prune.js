@@ -20,7 +20,7 @@
 	var DEFAULT_PRUNED_VALUE = '"-pruned-"';
 	var seen; // Same variable used for all stringifications
 	var iterator; // either forEachEnumerableOwnProperty, forEachEnumerableProperty or forEachProperty
-	
+
 	// iterates on enumerable own properties (default behavior)
 	var forEachEnumerableOwnProperty = function(obj, callback) {
 		for (var k in obj) {
@@ -99,7 +99,7 @@
 				value = value.toPrunedJSON(key);
 			}
 			if (value && typeof value.toJSON === 'function') {
-				value = value.toJSON(); 
+				value = value.toJSON();
 			}
 
 			switch (typeof value) {
@@ -132,13 +132,16 @@
 					if (replacer && value.length>arrayMaxLength) return replacer(value, v, false);
 					return v;
 				}
+				if (value instanceof RegExp) {
+					return quote(value.toString());
+				}
 				iterator(value, function(k) {
 					try {
 						v = str(k, value, depthDecr-1);
 						if (v) partial.push(quote(k) + ':' + v);
-					} catch (e) { 
+					} catch (e) {
 						// this try/catch due to forbidden accessors on some objects
-					}				
+					}
 				});
 				return '{' + partial.join(',') + '}';
 			case 'function':
@@ -148,7 +151,7 @@
 		}
 		return str('', {'': value}, depthDecr);
 	};
-	
+
 	prune.log = function() {
 		console.log.apply(console, Array.prototype.map.call(arguments, function(v) {
 			return JSON.parse(JSON.prune(v));
