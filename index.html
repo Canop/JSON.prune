@@ -29,7 +29,7 @@ var prunedWindow = JSON.parse(JSON.prune(window)); // this builds a lighter and 
 <code>JSON.prune.log</code> is a proxy over <code>console.log</code> deep cloning the objects before logging them, in order to avoid the delay problem encountered on non primitive objects logging (<a href=http://stackoverflow.com/questions/14296722/on-object-parameter-is-not-properly-set-in-javascript>see here for example</a>).
 </p>
 	<code><pre>
-JSON.prune.log('some object:', window); 
+JSON.prune.log('some object:', window);
 	</pre></code>
 <p>
 You should not use it frequently, only when you really need to see the objects how they were at logging time.
@@ -55,7 +55,7 @@ You may <a href=JSON.prune.js>download JSON.prune.js</a> and include it from you
 	<code><pre>
 JSON.prune({a:1, b:[1, 2, 3]});
 JSON.prune(window);
-JSON.prune(window.location,{inheritedProperties: true}); // without this setting, FireFox and IE only show an empty object
+JSON.prune(window.location,{inheritedProperties: true}); // without this setting, some browsers only show an empty object
 var a=[]; for (var i=0;i<1000;i++) {a.push(i<2?1:a[i-2]+a[i-1])} JSON.prune(a, 0, 200);
 	</pre></code>
 
@@ -67,7 +67,7 @@ var a=[]; for (var i=0;i<1000;i++) {a.push(i<2?1:a[i-2]+a[i-1])} JSON.prune(a, 0
 	<div id=buttons></div>
 	<code><pre id=result>
 	</pre></code>
-	<script>		
+	<script>
 		var tests = [
 			"'Hello'",
 			"var a={num:NaN,arr:[]};a.in=a;a",
